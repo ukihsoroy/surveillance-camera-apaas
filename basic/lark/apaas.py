@@ -34,7 +34,6 @@ def get_camera_list(namespace, tenant_token):
 
     if response.json() is not None and response.json()["data"]["items"] is not None:
         for item in response.json()["data"]["items"]:
-
             camera = Camera(
                 record_id=item["_id"],
                 code=item["monitoringPoint"],
@@ -49,7 +48,7 @@ def get_camera_list(namespace, tenant_token):
     return cameras
 
 def insert_review_record(namespace, tenant_token, camera_id, image):
-    url = f"https://ae-openapi.feishu.cn/v1/data/namespaces/{namespace}/objects/reviewRecord/records"
+    url = f"https://ae-openapi.feishu.cn/v1/data/namespaces/{namespace}/objects/cameraInspectionInfo/records"
     payload = "{\"record\":{\"monitoringImage\":[{\"mime_type\":\"" + image["type"] + "\",\"name\":\"" + image["name"] + "\",\"id\":\"" + image["fileId"] + "\",\"size\":\"" + str(image["size"]) + "\"}],\"camera\":{\"_id\":\"" + camera_id + "\"}}}}"
     headers = {
         "Authorization": tenant_token,
@@ -79,7 +78,7 @@ def upload_image(tenant_token, image):
     print(response.status_code)
     if response.status_code == 200:
         # 删除文件
-        # os.remove(image)
+        os.remove(image)
         print(response.json())
 
         resp = response.json()['data']
